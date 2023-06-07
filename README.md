@@ -8,7 +8,7 @@ Removing AutoPilot devices can be time consuming. You have to:
 3. Remove the device from the device list in the Azure portal.
 
 This script automates that tasks. All you need is a simple csv-file with the serial numbers of the AutoPilot devices.
-Then start the script and the steps as described above are executed for all devices. 
+Then start the script and the steps as described above are executed for all devices in the list of serial numbers. 
 
 ### Disclaimer: **use of this script is at your own risk!**
 
