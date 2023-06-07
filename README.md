@@ -17,7 +17,7 @@ Then start the script and the steps as described above are executed for all devi
 1. Create a csv-file with the serial numbers. This is just a simple file, with no headers.  
 Each line should contain just 1 serial number. This file **serialNumbers.csv** is stored in the same folder as the script.
 
-2. Install the necessary modules. You will need **MSOnline** and **WindowsAutoPilotIntune**.  
+2. Install the necessary powershell modules. You will need **MSOnline** and **WindowsAutoPilotIntune**.  
 Start a powershell console with elevated rights and use these commands to install the modules:  
 - **Install-Module MSOnline**
 - **Install-Module -Name WindowsAutoPilotIntune**
