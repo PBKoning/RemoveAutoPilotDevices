@@ -18,7 +18,7 @@ Connect-MSGraph     # Make sure to install the module first  with:         Insta
                     # If you get an error that you are not allowed to run
                     # scripts then first change the Executionpolicy with:   Set-Executionpolicy RemoteSigned
 
-$csvPath = ".\serialNumbers.csv"        # This csv-file contains the serial numbers of the AutoPilot devices. Each serialnumber has top be stored on a seperate line.
+$csvPath = ".\serialNumbers.csv"        # This csv-file contains the serial numbers of the AutoPilot devices. Each serial number has to be stored on a seperate line.
 $logPath = ".\notFoundDevices.log"      # Serial numbers that are not found as AutoPilotdevices are stored in this logfile
 
 # Read the CSV file
@@ -26,7 +26,7 @@ $serialNumbers = Get-Content -Path $csvPath
 
 # Iterate over each serial number
 foreach ($serialNumber in $serialNumbers) {
-    # Get the device by the serialnumber
+    # Get the device by the serial number
     $device = Get-AutoPilotDevice | Where-Object SerialNumber -eq $serialNumber 
 
     if ($device) { # Device was found
