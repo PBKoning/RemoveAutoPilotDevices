@@ -14,10 +14,11 @@ Then start the script and the steps as described above are executed for all devi
 
 ## Step-by-step
 
-1. Create a csv-file with the serial numbers. This is just a simple file, with no headers.  
-Each line should contain just 1 serial number. This file **serialNumbers.csv** is stored in the same folder as the script.
+1. Create a csv-file with the serial numbers.   
+This is just a simple file, with no headers. Each line should contain just 1 serial number. This file **serialNumbers.csv** is stored in the same folder as the script.
 
-2. Install the necessary powershell modules. You will need **MSOnline** and **WindowsAutoPilotIntune**.  
+2. Install the necessary powershell modules.  
+You will need **MSOnline** and **WindowsAutoPilotIntune**.  
 Start a powershell console with elevated rights and use these commands to install the modules:  
 - **Install-Module MSOnline**
 - **Install-Module -Name WindowsAutoPilotIntune**
@@ -26,7 +27,8 @@ Now you also have to execute this command once: **Import-Module Microsoft.Graph.
 You may get an error message that you don't have rights to execute scripts. In that case first you first have to change the Executionpolicy with: **Set-Executionpolicy RemoteSigned**  
 There are also other ways to accomplish this, but this worked for me. 
 
-3. Execute the script. Start a command prompt with elevated rights. Navigate to the folder with the script and the csvfile, like this:
+3. Execute the script.  
+Start a command prompt with elevated rights. Navigate to the folder with the script and the csv-file, like this:
 **cd "C:\path\to\folder\with\script"**
 
 Then start the script with this command:
