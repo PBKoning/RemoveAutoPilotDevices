@@ -12,9 +12,9 @@
 
 
 # Connect to Microsoft services. You have to enter your credentials twice.
-Connect-MsolService # Make shure to install the module first with:          Install-Module MSOnline
-Connect-MSGraph     # Make shure to install the module first  with:         Install-Module -Name WindowsAutoPilotIntune
-                    # Then run this command once:                           Import-Module Microsoft.Graph.Intune
+Connect-MsolService # Make sure to install the module first with:          Install-Module MSOnline
+Connect-MSGraph     # Make sure to install the module first  with:         Install-Module -Name WindowsAutoPilotIntune
+                    # Then run this command once:                          Import-Module Microsoft.Graph.Intune
                     # If you get an error that you are not allowed to run
                     # scripts then first change the Executionpolicy with:   Set-Executionpolicy RemoteSigned
 
