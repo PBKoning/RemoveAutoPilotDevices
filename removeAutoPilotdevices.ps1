@@ -2,7 +2,7 @@
 # * REMOVE AUTOPILOT DEVICES BY Paul Koning - 07-06-2023 *
 # ********************************************************
 
-# This scripts read a csv-file with serial numbers of AutoPilot devices.
+# This scripts reads a csv-file with serial numbers of AutoPilot devices.
 # Each device is removed from:
 # 								- The Endpoint device list 		(endpoint.microsoft.com)
 #          						- The AutoPilot device list 	(endpoint.microsoft.com)
