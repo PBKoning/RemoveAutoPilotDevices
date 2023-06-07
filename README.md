@@ -14,7 +14,7 @@ Then start the script and the steps as described above are executed for all devi
 
 ## Step-by-step
 
-1. Create a csv-file with the serial numbers. This is just a simple fie, with no headers.  
+1. Create a csv-file with the serial numbers. This is just a simple file, with no headers.  
 Each line should contain just 1 serial number. This file **serialNumbers.csv** is stored in the same folder as the script.
 
 2. Install the necessary modules. You will need **MSOnline** and **WindowsAutoPilotIntune**.  
