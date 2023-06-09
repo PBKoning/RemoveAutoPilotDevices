@@ -43,5 +43,4 @@ Added several improvements to the scripts.
 - More information for the users during the execution of the script.
 - It checks if the required modules are installed and stops the script if this is not the case.
 - It checks if **Microsoft.Graph.Intune** is imported (although it seems that when the script runs it always works).
-- It checks if a device has already been removed from Intune by hand.
-- 
+- It checks if a device has already been removed from Intune by hand. 
