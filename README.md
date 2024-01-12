@@ -24,7 +24,7 @@ Start a powershell console with elevated rights and use these commands to instal
 - **Install-Module -Name WindowsAutoPilotIntune**
 
 3. Execute the script.  
-Start a command prompt with elevated rights. Navigate to the folder with the script and the csv-file, like this:
+Start a command prompt with elevated rights. Navigate to the folder with the script and the csv-file, like this: 
 **cd "C:\path\to\folder\with\script"**
 
 Then start the script with this command:
