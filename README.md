@@ -40,6 +40,6 @@ Added several improvements to the scripts.
 - It checks if **Microsoft.Graph.Intune** is imported (although it seems that when the script runs it always works).
 - It checks if a device has already been removed from Intune by hand. 
 
-**12-01-2024**
+**12-01-2024**   
 The script did not work anymore. The MSOnline module is deprecated and that seems to be the cause.
 So I have rewritten the script for the newer Microsoft.Graph module.
