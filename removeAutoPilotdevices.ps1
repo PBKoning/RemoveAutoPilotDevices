@@ -1,5 +1,5 @@
 # ********************************************************
-# * REMOVE AUTOPILOT DEVICES BY Paul Koning - 09-06-2023 *
+# * REMOVE AUTOPILOT DEVICES BY Paul Koning - 12-01-2024 *
 # ********************************************************
 
 # This scripts reads a csv-file with serial numbers of AutoPilot devices.
@@ -13,108 +13,115 @@
 
 
 function Check-Module ($m) {
-# Function to check if a module is installed
-    if (-not (Get-Module -ListAvailable -Name $m)) {
-	    Write-Host "`nModule $m is not available, please install it first.`n`n" -ForegroundColor Red
-	    EXIT 1
-    } else {
-		Write-Host "`nModule $m is available." -ForegroundColor Green
+    # Function to check if a module is installed
+        if (-not (Get-Module -ListAvailable -Name $m)) {
+            Write-Host "`nModule $m is not available, please install it first.`n`n" -ForegroundColor Red
+            EXIT 1
+        } else {
+            Write-Host "`nModule $m is available." -ForegroundColor Green
+        }
     }
-}
-
-# Clear screen and write info on screen
-Clear-Host
-Write-Host "`n********************************************************" -ForegroundColor Blue
-Write-Host "* REMOVE AUTOPILOT DEVICES BY Paul Koning - 09-06-2023 *" -ForegroundColor Blue
-Write-Host "********************************************************`n" -ForegroundColor Blue
-
-
-# Checking if required modules are installed
-# If there are any errors, make sure to install the modules first with:
-#   Install-Module -Name MSOnline
-#   Install-Module -Name WindowsAutoPilotIntune
-
-Write-Host "`nChecking if required modules are installed."
-Check-Module("MSOnline")
-Check-Module("WindowsAutoPilotIntune")
-
-
-# Connect with Microsoft services
-
-Write-Host "`nConnecting to Microsoft services. Credentials have to be entered twice."
-
-# Coneccting with MSGraph might give a problem if module Microsoft.Graph.Intune is not imported
-try {
-    Write-Host "`nConnecting to MSGraph"
-    Connect-MSGraph
-} 
-catch {
-    Write-Host "`nCould not execute Connect-MSGraph." -ForegroundColor Red
-    Write-Host "Importing module and trying again.`n" -ForegroundColor Red
-    Import-Module Microsoft.Graph.Intune
-    	
+    
+    # Clear screen and write info on screen
+    Clear-Host
+    Write-Host "`n********************************************************" -ForegroundColor Blue
+    Write-Host "* REMOVE AUTOPILOT DEVICES BY Paul Koning - 12-01-2024 *" -ForegroundColor Blue
+    Write-Host "********************************************************`n" -ForegroundColor Blue
+    
+    
+    # Checking if required modules are installed
+    # If there are any errors, make sure to install the modules first with:
+    #   Install-Module -Name Microsoft.Graph
+    #   Install-Module -Name WindowsAutoPilotIntune
+    
+    Write-Host "`nChecking if required modules are installed."
+    Check-Module("Microsoft.Graph")
+    Check-Module("WindowsAutoPilotIntune")
+    
+    
+    # Connect with Microsoft services
+    
+    Write-Host "`nConnecting to Microsoft services. Enter your credentials."
+    
+    Write-Host "`nConnecting to MgGraph`n"		
+    Connect-MgGraph -NoWelcome
+    
+    # Connecting with MSGraph might give a problem if module Microsoft.Graph.Intune is not imported
     try {
-        Connect-MSGraph        		
-    }
+        Write-Host "Connecting to MSGraph"
+        Connect-MSGraph
+    } 
     catch {
-        Write-Host "Unexpected error: could still not execute Connect-MSGraph.`n`n" -ForegroundColor Red
-        Exit 1
-    }
-}
-
-Write-Host "Connecting to MsolService`n"		
-Connect-MsolService 					
-
-# Paths to files
-$csvPath = ".\serialNumbers.csv"        # This csv-file contains the serial numbers of the AutoPilot devices. Each serial number has to be stored on a seperate line.
-$logPath = ".\notFoundDevices.log"      # Serial numbers that are not found as AutoPilotdevices are stored in this logfile
-
-# Append date and time to logfile
-$dateTimeString = Get-Date -Format "dd-MM-yyy HH:mm:ss"
-" " | Out-File -FilePath $logPath -Append
-$dateTimeString | Out-File -FilePath $logPath -Append
-
-# Read the CSV file
-$serialNumbers = Get-Content -Path $csvPath
-
-Write-Host "Deleting all AutoPilotdevices by serial number.`n"	
-
-# Iterate over each serial number
-foreach ($serialNumber in $serialNumbers) {
-    # Get the device by the serial number
-    $device = Get-AutoPilotDevice | Where-Object SerialNumber -eq $serialNumber 
-
-    if ($device) { # Device was found
-        # Get required device information
-        $deviceId = $device.azureActiveDirectoryDeviceId	
-        $managedDeviceId = $device.managedDeviceId
-		
-        Write-Host "SerialNumber: $serialNumber" -ForegroundColor Blue
-        Write-Host "DeviceId: $deviceId"
-        Write-Host "ManagedDeviceId: $managedDeviceId `n"		
-
-        # Remove the Intune managed device
-        Write-Host "Removing from Intune" 
+        Write-Host "`nCould not execute Connect-MSGraph." -ForegroundColor Red
+        Write-Host "Importing module and trying again.`n" -ForegroundColor Red
+        Import-Module Microsoft.Graph.Intune
+            
         try {
-            Remove-IntuneManagedDevice -managedDeviceId $managedDeviceId
+            Connect-MSGraph        		
         }
         catch {
-            Write-Host "Could not remove from Intune devicelist. The device might have been already deleted manually in Intune." -ForegroundColor Red
-        }			
-
-        # Remove the AutoPilot device
-        Write-Host "Removing from AutoPilot"
-        Get-AutoPilotDevice | Where-Object SerialNumber -eq $serialNumber | Remove-AutopilotDevice		
-
-        # Remove the Azure AD device
-        Write-Host "Removing from AzureAD`n`n"
-        Remove-MsolDevice -DeviceId $deviceId -Force
-
-    } else { # Device was not found
-        # Write the serial number from the device that was not found to the log file
-        $serialNumber | Out-File -FilePath $logPath -Append
-		
-        # Write the not found serial number to the screen
-        Write-Host "Device with SerialNumber '$serialNumber' not found.`n`n" -ForegroundColor Red	
+            Write-Host "Unexpected error: could still not execute Connect-MSGraph.`n`n" -ForegroundColor Red
+            Exit 1
+        }
     }
-}
+    
+    # Paths to files
+    $csvPath = ".\serialNumbers.csv"        # This csv-file contains the serial numbers of the AutoPilot devices. Each serial number has to be stored on a seperate line.
+    $logPath = ".\notFoundDevices.log"      # Serial numbers that are not found as AutoPilotdevices are stored in this logfile
+    
+    # Append date and time to logfile
+    $dateTimeString = Get-Date -Format "dd-MM-yyy HH:mm:ss"
+    " " | Out-File -FilePath $logPath -Append
+    $dateTimeString | Out-File -FilePath $logPath -Append
+    
+    # Read the CSV file
+    $serialNumbers = Get-Content -Path $csvPath
+    
+    # Retrieve al Microsoft Graph devices
+    Write-Host "Retrieving all Microsoft Graph devices.`n"	
+    $allmgdevices = Get-MgDevice -All
+    
+    Write-Host "Deleting all devices by serial number.`n"	
+    
+    # Iterate over each serial number
+    foreach ($serialNumber in $serialNumbers) {
+        # Get the autopilot device by the serial number
+        $apdevice = Get-AutoPilotDevice | Where-Object SerialNumber -eq $serialNumber 
+    
+        if ($apdevice) { # Device was found
+            # Show device information    
+            $apdeviceid = $apdevice.azureActiveDirectoryDeviceId
+            $apid = $apdevice.id
+            $apmanageddeviceid = $apdevice.managedDeviceId
+            
+            Write-Host "SerialNumber: $serialNumber" -ForegroundColor Blue
+            Write-Host "DeviceId: $apdeviceid"
+            Write-Host "Id: $apid"
+            Write-Host "ManagedDeviceId: $apmanageddeviceid `n"		
+            
+            # Remove the Intune managed device
+            Write-Host "Removing from Intune" 
+            try {                
+                Remove-IntuneManagedDevice -managedDeviceId $apmanageddeviceid	
+            }
+            catch {
+                Write-Host "Could not remove from Intune devicelist. The device might have been already deleted manually in Intune." -ForegroundColor Red
+            }			
+    
+            # Remove the AutoPilot device
+            Write-Host "Removing from AutoPilot"            
+            Remove-AutopilotDevice $apid
+    
+            # Remove the Azure AD device
+            Write-Host "Removing from AzureAD`n`n"            
+            $mgdevice = $allmgdevices | Where-Object { $_.DeviceId -eq $apdeviceid }
+            Remove-MgDevice -DeviceID $mgdevice.id
+    
+        } else { # Device was not found
+            # Write the serial number from the device that was not found to the log file
+            $serialNumber | Out-File -FilePath $logPath -Append
+            
+            # Write the not found serial number to the screen
+            Write-Host "Device with SerialNumber '$serialNumber' not found.`n`n" -ForegroundColor Red	
+        }
+    }    
