@@ -1,5 +1,5 @@
 # ********************************************************
-# * REMOVE AUTOPILOT DEVICES BY Paul Koning - 12-01-2024 *
+# * REMOVE AUTOPILOT DEVICES BY Paul Koning - 30-09-2024 *
 # ********************************************************
 
 # This scripts reads a csv-file with serial numbers of AutoPilot devices.
@@ -25,7 +25,7 @@ function Check-Module ($m) {
     # Clear screen and write info on screen
     Clear-Host
     Write-Host "`n********************************************************" -ForegroundColor Blue
-    Write-Host "* REMOVE AUTOPILOT DEVICES BY Paul Koning - 12-01-2024 *" -ForegroundColor Blue
+    Write-Host "* REMOVE AUTOPILOT DEVICES BY Paul Koning - 30-09-2024 *" -ForegroundColor Blue
     Write-Host "********************************************************`n" -ForegroundColor Blue
     
     
@@ -35,35 +35,23 @@ function Check-Module ($m) {
     #   Install-Module -Name WindowsAutoPilotIntune
     
     Write-Host "`nChecking if required modules are installed."
-    Check-Module("Microsoft.Graph")
+    #Check-Module("Microsoft.Graph")
+    #Check-Module("Microsoft.Graph")
     Check-Module("WindowsAutoPilotIntune")
     
     
     # Connect with Microsoft services
     
     Write-Host "`nConnecting to Microsoft services. Enter your credentials."
-    
+    	
     Write-Host "`nConnecting to MgGraph`n"		
     Connect-MgGraph -NoWelcome
     
     # Connecting with MSGraph might give a problem if module Microsoft.Graph.Intune is not imported
-    try {
-        Write-Host "Connecting to MSGraph"
-        Connect-MSGraph
-    } 
-    catch {
-        Write-Host "`nCould not execute Connect-MSGraph." -ForegroundColor Red
-        Write-Host "Importing module and trying again.`n" -ForegroundColor Red
-        Import-Module Microsoft.Graph.Intune
-            
-        try {
-            Connect-MSGraph        		
-        }
-        catch {
-            Write-Host "Unexpected error: could still not execute Connect-MSGraph.`n`n" -ForegroundColor Red
-            Exit 1
-        }
-    }
+	Write-Host "`nConnecting to MSGraph`n"		
+	Update-MSGraphEnvironment -AppId 9a9fdd0a-4fe1-42ce-8dcf-f9e5c90344b3
+	Connect-MSGraph
+  
     
     # Paths to files
     $csvPath = ".\serialNumbers.csv"        # This csv-file contains the serial numbers of the AutoPilot devices. Each serial number has to be stored on a seperate line.
